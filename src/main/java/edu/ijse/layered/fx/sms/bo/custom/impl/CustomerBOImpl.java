@@ -1,0 +1,57 @@
+package edu.ijse.layered.fx.sms.bo.custom.impl;
+
+import edu.ijse.layered.fx.sms.bo.custom.CustomerBO;
+import edu.ijse.layered.fx.sms.dao.DAOFactory;
+import edu.ijse.layered.fx.sms.dao.custom.CustomerDAO;
+import edu.ijse.layered.fx.sms.dto.CustomerDTO;
+import edu.ijse.layered.fx.sms.entity.CustomerEntity;
+import java.util.ArrayList;
+
+public class CustomerBOImpl implements CustomerBO {
+
+    CustomerDAO customerDAO = (CustomerDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.CUSTOMER);
+
+    @Override
+    public String save(CustomerDTO customerDTO) throws Exception {
+
+        CustomerEntity customerEntity = new CustomerEntity(
+            customerDTO.getCustomerId(),
+            customerDTO.getName(),
+            customerDTO.getPhone(),
+            customerDTO.getEmail(),
+            customerDTO.getLoyaltyCode()
+        );
+
+        return Boolean.parseBoolean(customerDAO.save(customerEntity)) ? "Customer Save Successfully" : "Customer Save Failed";
+
+    }
+
+    @Override
+    public String update(CustomerDTO customerDTO) throws Exception {
+
+        CustomerEntity customerEntity = new CustomerEntity(
+                customerDTO.getCustomerId(),
+                customerDTO.getName(),
+                customerDTO.getPhone(),
+                customerDTO.getEmail(),
+                customerDTO.getLoyaltyCode()
+        );
+
+        return Boolean.parseBoolean(customerDAO.update(customerEntity)) ? "Customer Update Successfully" : "Customer Updated Failed";
+    }
+
+    @Override
+    public String delete(String id) throws Exception {
+        return "";
+    }
+
+    @Override
+    public CustomerDTO search(String id) throws Exception {
+        return null;
+    }
+
+    @Override
+    public ArrayList<CustomerDTO> getAll() throws Exception {
+        return null;
+    }
+}
