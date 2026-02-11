@@ -65,6 +65,6 @@ public class CategoryBOImpl implements CategoryBO {
             ));
         }
 
-        return null;
+        return categoryDTOS;
     }
 }

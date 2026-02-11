@@ -42,16 +42,36 @@ public class CustomerBOImpl implements CustomerBO {
 
     @Override
     public String delete(String id) throws Exception {
-        return "";
+        return Boolean.parseBoolean(customerDAO.delete(id)) ? "Customer Deleted Successfully" : "Customer Deleted Failed";
     }
 
     @Override
     public CustomerDTO search(String id) throws Exception {
-        return null;
+        CustomerEntity customerEntity = customerDAO.search(id);
+        return new CustomerDTO(
+                customerEntity.getCustomerId(),
+                customerEntity.getName(),
+                customerEntity.getPhone(),
+                customerEntity.getEmail(),
+                customerEntity.getLoyaltyCode()
+        );
     }
 
     @Override
     public ArrayList<CustomerDTO> getAll() throws Exception {
-        return null;
+        ArrayList <CustomerEntity> customerEntities = customerDAO.getAll();
+        ArrayList <CustomerDTO> customerDTOS = new ArrayList<>();
+
+        for (CustomerEntity customerEntity : customerEntities){
+            customerDTOS.add(new CustomerDTO(
+                    customerEntity.getCustomerId(),
+                    customerEntity.getName(),
+                    customerEntity.getPhone(),
+                    customerEntity.getEmail(),
+                    customerEntity.getLoyaltyCode()
+            ));
+        }
+
+        return customerDTOS;
     }
 }
