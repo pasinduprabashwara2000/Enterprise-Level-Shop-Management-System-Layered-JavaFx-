@@ -1,7 +1,8 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.ExpenseDTO;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.ExpenseModel;
+import edu.ijse.layered.fx.sms.bo.custom.ExpenseBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.ExpenseBOImpl;
+import edu.ijse.layered.fx.sms.dto.ExpenseDTO;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,7 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ManageExpenseController {
 
-    private final ExpenseModel expenseModel = new ExpenseModel();
+    private final ExpenseBO expenseBO = new ExpenseBOImpl();
 
     @FXML
     private TextField amountTxt;
@@ -100,7 +101,7 @@ public class ManageExpenseController {
         try {
             expenseTable.setItems(
                     FXCollections.observableArrayList(
-                            expenseModel.getAllExpenses()
+                            expenseBO.getAll()
                     )
             );
         } catch (Exception e) {
@@ -121,7 +122,7 @@ public class ManageExpenseController {
                     datePicker.getValue()
             );
 
-            String rsp = expenseModel.saveExpense(dto);
+            String rsp = expenseBO.save(dto);
             new Alert(Alert.AlertType.INFORMATION, rsp).show();
             loadTable();
 
@@ -142,7 +143,7 @@ public class ManageExpenseController {
                     datePicker.getValue()
             );
 
-            String rsp = expenseModel.updateExpense(dto);
+            String rsp = expenseBO.update(dto);
             new Alert(Alert.AlertType.INFORMATION, rsp).show();
             loadTable();
             navigateReset(event);
@@ -154,7 +155,7 @@ public class ManageExpenseController {
     @FXML
     void navigateDelete(ActionEvent event) {
         try {
-            String rsp = expenseModel.deleteExpense(idTxt.getText());
+            String rsp = expenseBO.delete(idTxt.getText());
             new Alert(Alert.AlertType.INFORMATION,rsp).show();
             loadTable();
             navigateReset(event);

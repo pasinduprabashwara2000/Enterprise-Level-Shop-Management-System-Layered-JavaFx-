@@ -1,7 +1,6 @@
 package edu.ijse.layered.fx.sms.bo;
 
-import edu.ijse.layered.fx.sms.bo.custom.impl.CategoryBOImpl;
-import edu.ijse.layered.fx.sms.bo.custom.impl.CustomerBOImpl;
+import edu.ijse.layered.fx.sms.bo.custom.impl.*;
 
 public class BOFactory {
 
@@ -27,7 +26,19 @@ public class BOFactory {
         switch (boTypes){
             case CATEGORY -> new CategoryBOImpl();
             case CUSTOMER -> new CustomerBOImpl();
+            case EXPENSE -> new ExpenseBOImpl();
+            case LOGIN -> new LoginBOImpl();
+            case ORDER -> new OrderBOImpl();
+            case ORDER_PRODUCT -> new OrderProductBOImpl();
+            case PAYMENT -> new PaymentBOImpl();
+            case PRODUCT -> new ProductBOImpl();
+            case PURCHASE_ORDER -> new PurchaseOrderBOImpl();
+            case RETURN -> new ReturnBOImpl();
+            case ROLE -> new RoleBOImpl();
+            case SUPPLIER -> new SupplierBOImpl();
+            case USER -> new UserBOImpl();
         }
+
         return null;
     }
 

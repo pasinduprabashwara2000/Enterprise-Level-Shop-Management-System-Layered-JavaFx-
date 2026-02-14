@@ -1,9 +1,10 @@
 package edu.ijse.layered.fx.sms.dao.custom.impl;
 
 import edu.ijse.layered.fx.sms.dao.custom.RoleDAO;
-import edu.ijse.layered.fx.sms.dto.CategoryDTO;
 import edu.ijse.layered.fx.sms.entity.RoleEntity;
 import edu.ijse.layered.fx.sms.util.CrudUtil;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class RoleDAOImpl implements RoleDAO {
 
@@ -24,18 +25,34 @@ public class RoleDAOImpl implements RoleDAO {
 
     @Override
     public String delete(String id) throws Exception {
-        return CrudUtil.execute("DELETE FROM Role WHERE roleID=?",
-                id);
+        return CrudUtil.execute("DELETE FROM Role WHERE roleID=?", id);
     }
 
     @Override
     public RoleEntity search(String id) throws Exception {
-        return CrudUtil.execute("SELECT * FROM Role WHERE roleID=?",
-                id);
+        ResultSet rst = CrudUtil.execute("SELECT * FROM Role WHERE roleID=?", id);
+        if(rst.next()){
+            return new RoleEntity(
+                    rst.getString("roleID"),
+                    rst.getString("name"),
+                    rst.getString("userID")
+            );
+        }
+        return null;
     }
 
     @Override
-    public CategoryDTO getAll() throws Exception {
-        return CrudUtil.execute("SELECT * FROM Role");
+    public ArrayList<RoleEntity> getAll() throws Exception {
+        ResultSet rst = CrudUtil.execute("SELECT * FROM Role");
+        ArrayList <RoleEntity> roleEntities = new ArrayList<>();
+
+        while (rst.next()){
+            roleEntities.add(new RoleEntity(
+                    rst.getString("roleID"),
+                    rst.getString("name"),
+                    rst.getString("userID")
+            ));
+        }
+        return roleEntities;
     }
 }

@@ -1,9 +1,10 @@
 package edu.ijse.layered.fx.sms.dao.custom.impl;
 
 import edu.ijse.layered.fx.sms.dao.custom.PurchaseOrderDAO;
-import edu.ijse.layered.fx.sms.dto.CategoryDTO;
 import edu.ijse.layered.fx.sms.entity.PurchaseOrderEntity;
 import edu.ijse.layered.fx.sms.util.CrudUtil;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class PurchaseOrderDAOImpl implements PurchaseOrderDAO {
 
@@ -30,18 +31,38 @@ public class PurchaseOrderDAOImpl implements PurchaseOrderDAO {
 
     @Override
     public String delete(String id) throws Exception {
-        return CrudUtil.execute("DELETE FROM purchase_order WHERE po_id = ?",
-                id);
+        return CrudUtil.execute("DELETE FROM purchase_order WHERE po_id = ?", id);
     }
 
     @Override
     public PurchaseOrderEntity search(String id) throws Exception {
-        return CrudUtil.execute("SELECT * FROM purchase_order WHERE po_id = ?",
-                id);
+        ResultSet rst = CrudUtil.execute("SELECT * FROM purchase_order WHERE po_id = ?", id);
+        return new PurchaseOrderEntity(
+                rst.getString("po_id"),
+                rst.getString("supplier_id"),
+                rst.getDouble("total_cost"),
+                rst.getString("status"),
+                rst.getDate("create_at").toLocalDate(),
+                rst.getDate("expected_date").toLocalDate()
+        );
     }
 
     @Override
-    public CategoryDTO getAll() throws Exception {
-        return CrudUtil.execute("SELECT * FROM purchase_order");
+    public ArrayList<PurchaseOrderEntity> getAll() throws Exception {
+
+        ResultSet rst = CrudUtil.execute("SELECT * FROM purchase_order");
+        ArrayList <PurchaseOrderEntity> purchaseOrderEntities = new ArrayList<>();
+
+        while (rst.next()){
+            purchaseOrderEntities.add(new PurchaseOrderEntity(
+                    rst.getString("po_id"),
+                    rst.getString("supplier_id"),
+                    rst.getDouble("total_cost"),
+                    rst.getString("status"),
+                    rst.getDate("create_at").toLocalDate(),
+                    rst.getDate("expected_date").toLocalDate()
+            ));
+        }
+        return purchaseOrderEntities;
     }
 }

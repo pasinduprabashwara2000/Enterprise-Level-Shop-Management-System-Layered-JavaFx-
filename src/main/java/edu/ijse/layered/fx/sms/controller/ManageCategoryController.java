@@ -1,9 +1,8 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.layered.fx.sms.dao.custom.CategoryDAO;
-import edu.ijse.layered.fx.sms.dao.custom.impl.CategoryDAOImpl;
+import edu.ijse.layered.fx.sms.bo.custom.CategoryBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.CategoryBOImpl;
 import edu.ijse.layered.fx.sms.dto.CategoryDTO;
-import edu.ijse.layered.fx.sms.entity.CategoryEntity;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -17,7 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ManageCategoryController {
 
-    private final CategoryDAO categoryDAO = new CategoryDAOImpl();
+    private final CategoryBO categoryBO = new CategoryBOImpl();
 
     @FXML
     private TextField categoryIDTxt;
@@ -88,7 +87,7 @@ public class ManageCategoryController {
     private void loadTable() {
         try {
             detailsTable.getItems().clear();
-            detailsTable.getItems().addAll(categoryDAO.getAll());
+            detailsTable.getItems().addAll(categoryBO.getAll());
         } catch (Exception e) {
             new Alert(AlertType.ERROR,e.getMessage()).show();
         }
@@ -97,7 +96,7 @@ public class ManageCategoryController {
     @FXML
     void navigateDelete(ActionEvent event) {
         try {
-            String res = categoryDAO.delete(categoryIDTxt.getText());
+            String res = categoryBO.delete(categoryIDTxt.getText());
             new Alert(AlertType.INFORMATION,res).show();
             loadTable();
             navigateReset(event);
@@ -115,12 +114,12 @@ public class ManageCategoryController {
     @FXML
     void navigateSave(ActionEvent event) {
         try{
-            CategoryEntity categoryEntity= new CategoryEntity(
+            CategoryDTO categoryDTO = new CategoryDTO(
                     null,
                     nameTxt.getText(),
                     descriptionTxt.getText()
             );
-            String res = categoryDAO.save(categoryEntity);
+            String res = categoryBO.save(categoryDTO);
             new Alert(Alert.AlertType.INFORMATION,res).show();
             loadTable();
             navigateReset(event);
@@ -132,12 +131,12 @@ public class ManageCategoryController {
     @FXML
     void navigateUpdate(ActionEvent event) {
         try {
-            CategoryEntity categoryEntity = new CategoryEntity(
+            CategoryDTO categoryDTO = new CategoryDTO(
                 categoryIDTxt.getText(),
                 nameTxt.getText(),
                 descriptionTxt.getText()
             );
-            String res = categoryDAO.update(categoryEntity);
+            String res = categoryBO.update(categoryDTO);
             new Alert(AlertType.INFORMATION,res).show();
             loadTable();
             navigateReset(event);

@@ -1,8 +1,11 @@
-package edu.ijse.mvc.fx.shopmanagementsystem.controller;
+package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.PaymentDTO;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.PaymentModel;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.ReturnModel;
+import edu.ijse.layered.fx.sms.bo.custom.PaymentBO;
+import edu.ijse.layered.fx.sms.bo.custom.ReturnBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.PaymentBOImpl;
+import edu.ijse.layered.fx.sms.bo.custom.impl.ReturnBOImpl;
+import edu.ijse.layered.fx.sms.dto.PaymentDTO;
+import edu.ijse.layered.fx.sms.dto.ReturnDTO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -17,37 +20,36 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import java.util.ArrayList;
 
 public class ManageReturnController {
 
-    private final PaymentModel paymentModel = new PaymentModel();
-    private final ReturnModel returnModel = new ReturnModel();
+    private final ReturnBO returnBO = new ReturnBOImpl();
+    private final PaymentBO paymentBO = new PaymentBOImpl();
 
     @FXML
     private ComboBox<String> actionCmb;
 
     @FXML
-    private TableColumn<edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity, String> colPaymentId;
+    private TableColumn<ReturnDTO, String> colPaymentId;
 
     @FXML
-    private TableColumn<edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity, String> colAction;
+    private TableColumn<ReturnDTO, String> colAction;
 
     @FXML
-    private TableColumn<edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity, String> colReason;
+    private TableColumn<ReturnDTO, String> colReason;
 
     @FXML
-    private TableColumn<edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity, Double> colRefund;
+    private TableColumn<ReturnDTO, Double> colRefund;
 
     @FXML
-    private TableColumn<edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity, java.time.LocalDate> colReturnDate;
+    private TableColumn<ReturnDTO, java.time.LocalDate> colReturnDate;
 
     @FXML
-    private TableColumn<edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity, String> colReturnId;
+    private TableColumn<ReturnDTO, String> colReturnId;
 
     @FXML
-    private TableColumn<edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity, String> colStatus;
+    private TableColumn<ReturnDTO, String> colStatus;
 
     @FXML
     private ComboBox<String> paymentIdCombo;
@@ -71,7 +73,7 @@ public class ManageReturnController {
     private TextField returnIDTxt;
 
     @FXML
-    private TableView<edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity> returnTbl;
+    private TableView<ReturnDTO> returnTbl;
 
     @FXML
     private Button saveBtn;
@@ -106,14 +108,14 @@ public class ManageReturnController {
     void loadTable(){
         try {
             returnTbl.getItems().clear();
-            returnTbl.getItems().addAll(returnModel.getAllReturns());
+            returnTbl.getItems().addAll(returnBO.getAll());
         } catch (Exception e) {
             new Alert(AlertType.ERROR, e.getMessage()).show();
         }
     }
 
     void loadSelectedRow() {
-        edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity selectedReturn = returnTbl.getSelectionModel().getSelectedItem();
+        ReturnDTO selectedReturn = returnTbl.getSelectionModel().getSelectedItem();
         if (selectedReturn != null) {
             returnIDTxt.setText(selectedReturn.getReturnId());
             paymentIdCombo.setValue(selectedReturn.getPaymentId());
@@ -128,7 +130,7 @@ public class ManageReturnController {
     private void loadCustomerIdThread() throws Exception {
 
         Task <ObservableList<String>> task = new Task<>() {
-            ArrayList <PaymentDTO> payments =  paymentModel.getAllPayments();
+            ArrayList <PaymentDTO> payments =  paymentBO.getAll();
             @Override
             protected ObservableList<String> call() throws Exception {
                 return FXCollections.observableArrayList(payments.stream().map(PaymentDTO::getPaymentID).toList());
@@ -144,7 +146,7 @@ public class ManageReturnController {
     @FXML
     void navigateDelete(ActionEvent event) {
         try {
-            String rsp = returnModel.deleteReturn(returnIDTxt.getText());
+            String rsp = returnBO.delete(returnIDTxt.getText());
             new Alert(AlertType.INFORMATION, rsp).show();
             loadTable();
             navigateReset(event);
@@ -167,7 +169,7 @@ public class ManageReturnController {
     @FXML
     void navigateSave(ActionEvent event) {
         try {
-            edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity returnDTO = new edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity(
+            ReturnDTO returnDTO = new ReturnDTO(
                     null,
                     paymentIdCombo.getValue(),
                     Double.parseDouble(refundAmountTxt.getText()),
@@ -177,7 +179,7 @@ public class ManageReturnController {
                     returnDatePicker.getValue()
             );
 
-            String rsp = returnModel.saveReturn(returnDTO);
+            String rsp = returnBO.save(returnDTO);
             new Alert(AlertType.INFORMATION, rsp).show();
             loadTable();
             navigateReset(event);
@@ -189,7 +191,7 @@ public class ManageReturnController {
     @FXML
     void navigateUpdate(ActionEvent event) {
         try {
-            edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity returnDTO = new edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity(
+            ReturnDTO returnDTO = new ReturnDTO(
                     returnIDTxt.getText(),
                     paymentIdCombo.getValue(),
                     Double.parseDouble(refundAmountTxt.getText()),
@@ -199,7 +201,7 @@ public class ManageReturnController {
                     returnDatePicker.getValue()
             );
 
-            String rsp = returnModel.updateReturn(returnDTO);
+            String rsp = returnBO.update(returnDTO);
             new Alert(AlertType.INFORMATION, rsp).show();
             loadTable();
             navigateReset(event);

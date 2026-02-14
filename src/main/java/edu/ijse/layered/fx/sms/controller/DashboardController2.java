@@ -1,7 +1,6 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.ProductTM;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.DashboardModel;
+import edu.ijse.layered.fx.sms.dto.custom.ProductTM;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;

@@ -1,9 +1,12 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.*;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.CustomerModel;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.OrderModel;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.ProductModel;
+import edu.ijse.layered.fx.sms.bo.custom.CustomerBO;
+import edu.ijse.layered.fx.sms.bo.custom.OrderProductBO;
+import edu.ijse.layered.fx.sms.bo.custom.ProductBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.CustomerBOImpl;
+import edu.ijse.layered.fx.sms.bo.custom.impl.OrderProductBOImpl;
+import edu.ijse.layered.fx.sms.bo.custom.impl.ProductBOImpl;
+import edu.ijse.layered.fx.sms.dto.custom.OrderProductTM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -16,9 +19,9 @@ import java.util.Date;
 
 public class ManageOrderController {
 
-    final private CustomerModel customerModel = new CustomerModel();
-    final private ProductModel productModel = new ProductModel();
-    private OrderModel orderModel = new OrderModel();
+    final private CustomerBO customerBO = new CustomerBOImpl();
+    final private ProductBO productBO = new ProductBOImpl();
+    private OrderProductBO orderProductBO = new OrderProductBOImpl();
 
     @FXML
     private Button btnPlaceOrder;

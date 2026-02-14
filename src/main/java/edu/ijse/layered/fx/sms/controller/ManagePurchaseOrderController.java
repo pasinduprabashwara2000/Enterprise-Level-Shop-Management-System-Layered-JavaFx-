@@ -1,9 +1,11 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.PurchaseOrderDTO;
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.SupplierDTO;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.PurchaseOrderModel;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.SupplierModel;
+import edu.ijse.layered.fx.sms.bo.custom.PurchaseOrderBO;
+import edu.ijse.layered.fx.sms.bo.custom.SupplierBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.PurchaseOrderBOImpl;
+import edu.ijse.layered.fx.sms.bo.custom.impl.SupplierBOImpl;
+import edu.ijse.layered.fx.sms.dto.PurchaseOrderDTO;
+import edu.ijse.layered.fx.sms.dto.SupplierDTO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -16,8 +18,8 @@ import java.util.ArrayList;
 
 public class ManagePurchaseOrderController {
 
-    private final PurchaseOrderModel purchaseOrderModel = new PurchaseOrderModel();
-    private final SupplierModel supplierModel = new SupplierModel();
+    private final PurchaseOrderBO purchaseOrderBO = new PurchaseOrderBOImpl();
+    private final SupplierBO supplierBO = new SupplierBOImpl();
 
     @FXML
     private TableColumn<PurchaseOrderDTO, LocalDate> colCreatedAt;
@@ -81,7 +83,7 @@ public class ManagePurchaseOrderController {
     private void loadTable() {
         try {
             poTable.getItems().clear();
-            poTable.getItems().addAll(purchaseOrderModel.getAllPurchaseOrders());
+            poTable.getItems().addAll(purchaseOrderBO.getAll());
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         }
@@ -106,7 +108,7 @@ public class ManagePurchaseOrderController {
     void loadSupplierIdThread() throws Exception{
         Task <ObservableList<String>> task = new Task<>() {
 
-            ArrayList <SupplierDTO> suppliers = supplierModel.getAllSuppliers();
+            ArrayList <SupplierDTO> suppliers = supplierBO.getAll();
             @Override
             protected ObservableList<String> call() throws Exception {
                 return FXCollections.observableArrayList(suppliers.stream().map(SupplierDTO::getSupplierID).toList());
@@ -128,7 +130,7 @@ public class ManagePurchaseOrderController {
                     createdAtPicker.getValue(),
                     expectedDatePicker.getValue()
             );
-            String res = purchaseOrderModel.savePurchaseOrder(dto);
+            String res = purchaseOrderBO.save(dto);
             new Alert(Alert.AlertType.INFORMATION, res).show();
             loadTable();
             navigateReset(event);
@@ -148,7 +150,7 @@ public class ManagePurchaseOrderController {
                     createdAtPicker.getValue(),
                     expectedDatePicker.getValue()
             );
-            String res = purchaseOrderModel.updatePurchaseOrder(dto);
+            String res = purchaseOrderBO.update(dto);
             new Alert(Alert.AlertType.INFORMATION, res).show();
             loadTable();
             navigateReset(event);
@@ -160,7 +162,7 @@ public class ManagePurchaseOrderController {
     @FXML
     void navigateDelete(ActionEvent event) {
         try {
-            String res = purchaseOrderModel.deletePurchaseOrder(
+            String res = purchaseOrderBO.delete(
                     poIdTxt.getText()
             );
             new Alert(Alert.AlertType.INFORMATION, res).show();

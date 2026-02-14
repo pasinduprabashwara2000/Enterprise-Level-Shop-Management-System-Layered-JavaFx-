@@ -1,7 +1,9 @@
 package edu.ijse.layered.fx.sms.dao.custom;
 
-import edu.ijse.layered.fx.sms.dao.CrudDAO;
-import edu.ijse.layered.fx.sms.entity.OrderEntity;
+import edu.ijse.layered.fx.sms.dto.OrderDTO;
 
-public interface OrderDAO extends CrudDAO<OrderEntity> {
+public interface OrderDAO {
+
+    int placeOrder(OrderDTO orderDTO) throws Exception;
+
 }

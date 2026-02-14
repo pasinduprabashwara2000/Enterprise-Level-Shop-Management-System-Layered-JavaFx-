@@ -1,7 +1,8 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.LoginDTO;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.LoginModel;
+import edu.ijse.layered.fx.sms.bo.custom.LoginBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.LoginBOImpl;
+import edu.ijse.layered.fx.sms.dto.LoginDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +12,7 @@ import javafx.stage.Stage;
 
 public class ManageLoginController {
 
-    private final LoginModel loginModel = new LoginModel();
+    private final LoginBO loginBO = new LoginBOImpl();
 
     @FXML
     private Button clearBtn;
@@ -43,7 +44,7 @@ public class ManageLoginController {
                 return;
             }
 
-            LoginDTO loginDTO = loginModel.findByUsernameAndPassword(username, password);
+            LoginDTO loginDTO = loginBO.findByUsernameAndPassword(username,password);
 
             if (loginDTO != null) {
 

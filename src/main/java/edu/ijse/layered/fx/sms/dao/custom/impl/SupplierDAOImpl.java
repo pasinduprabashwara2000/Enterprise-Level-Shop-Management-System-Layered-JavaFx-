@@ -1,9 +1,10 @@
 package edu.ijse.layered.fx.sms.dao.custom.impl;
 
 import edu.ijse.layered.fx.sms.dao.custom.SupplierDAO;
-import edu.ijse.layered.fx.sms.dto.CategoryDTO;
 import edu.ijse.layered.fx.sms.entity.SupplierEntity;
 import edu.ijse.layered.fx.sms.util.CrudUtil;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class SupplierDAOImpl implements SupplierDAO {
 
@@ -30,18 +31,39 @@ public class SupplierDAOImpl implements SupplierDAO {
 
     @Override
     public String delete(String id) throws Exception {
-        return CrudUtil.execute("DELETE FROM Supplier WHERE supplierID=?",
-                id);
+        return CrudUtil.execute("DELETE FROM Supplier WHERE supplierID=?", id);
     }
 
     @Override
     public SupplierEntity search(String id) throws Exception {
-        return CrudUtil.execute("SELECT * FROM Supplier WHERE supplierID=?",
-                id);
+        ResultSet rst = CrudUtil.execute("SELECT * FROM Supplier WHERE supplierID=?", id);
+        if (rst.next()){
+            new SupplierEntity(
+                    rst.getString("supplierID"),
+                    rst.getString("name"),
+                    rst.getString("contactPerson"),
+                    rst.getInt("phone"),
+                    rst.getString("email"),
+                    rst.getString("address"));
+        }
+        return null;
     }
 
     @Override
-    public CategoryDTO getAll() throws Exception {
-        return CrudUtil.execute("SELECT * FROM Supplier");
+    public ArrayList<SupplierEntity> getAll() throws Exception {
+        ResultSet rst = CrudUtil.execute("SELECT * FROM Supplier");
+        ArrayList <SupplierEntity> supplierEntities = new ArrayList<>();
+
+        while (rst.next()){
+            supplierEntities.add(new SupplierEntity(
+                    rst.getString("supplierID"),
+                    rst.getString("name"),
+                    rst.getString("contactPerson"),
+                    rst.getInt("phone"),
+                    rst.getString("email"),
+                    rst.getString("address")
+            ));
+        }
+        return supplierEntities;
     }
 }

@@ -1,9 +1,10 @@
 package edu.ijse.layered.fx.sms.dao.custom.impl;
 
 import edu.ijse.layered.fx.sms.dao.custom.ProductDAO;
-import edu.ijse.layered.fx.sms.dto.CategoryDTO;
 import edu.ijse.layered.fx.sms.entity.ProductEntity;
 import edu.ijse.layered.fx.sms.util.CrudUtil;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class ProductDAOImpl implements ProductDAO {
 
@@ -34,18 +35,51 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public String delete(String id) throws Exception {
-        return CrudUtil.execute("DELETE FROM Product WHERE productID = ?",
-                id);
+        return CrudUtil.execute("DELETE FROM Product WHERE productID = ?", id);
     }
 
     @Override
     public ProductEntity search(String id) throws Exception {
-        return CrudUtil.execute("SELECT * FROM Product WHERE productID = ?",
-                id);
+        ResultSet rst =  CrudUtil.execute("SELECT * FROM Product WHERE productID = ?", id);
+        return new ProductEntity(
+                rst.getString("productID"),
+                rst.getString("SKU"),
+                rst.getInt("barCode"),
+                rst.getString("name"),
+                rst.getDouble("unitPrice"),
+                rst.getInt("qyt"),
+                rst.getBoolean("active"),
+                rst.getString("categoryID")
+        );
     }
 
     @Override
-    public CategoryDTO getAll() throws Exception {
-        return CrudUtil.execute("SELECT * FROM Product");
+    public ArrayList<ProductEntity> getAll() throws Exception {
+        ResultSet rst = CrudUtil.execute("SELECT * FROM Product");
+        ArrayList <ProductEntity> productEntities = new ArrayList<>();
+
+        while (rst.next()){
+            productEntities.add(new ProductEntity(
+                    rst.getString("productID"),
+                    rst.getString("SKU"),
+                    rst.getInt("barCode"),
+                    rst.getString("name"),
+                    rst.getDouble("unitPrice"),
+                    rst.getInt("qyt"),
+                    rst.getBoolean("active"),
+                    rst.getString("categoryID")
+            ));
+        }
+        return productEntities;
     }
+
+    @Override
+    public boolean decreaseProductQTY(String productId, int qty) throws Exception {
+        return CrudUtil.execute(
+                "UPDATE Product SET qyt = qyt - ? WHERE productID = ?",
+                qty,
+                productId
+        );
+    }
+
 }

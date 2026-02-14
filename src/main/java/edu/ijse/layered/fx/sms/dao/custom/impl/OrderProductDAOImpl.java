@@ -1,33 +1,43 @@
 package edu.ijse.layered.fx.sms.dao.custom.impl;
 
+import edu.ijse.layered.fx.sms.dao.DAOFactory;
 import edu.ijse.layered.fx.sms.dao.custom.OrderProductDAO;
-import edu.ijse.layered.fx.sms.dto.CategoryDTO;
-import edu.ijse.layered.fx.sms.entity.OrderProductEntity;
+import edu.ijse.layered.fx.sms.dao.custom.ProductDAO;
+import edu.ijse.layered.fx.sms.dto.OrderProductDTO;
+import edu.ijse.layered.fx.sms.util.CrudUtil;
+import java.util.List;
 
 public class OrderProductDAOImpl implements OrderProductDAO {
 
-    @Override
-    public String save(OrderProductEntity orderProductEntity) throws Exception {
-        return "";
-    }
+    private final ProductDAO productDAO = (ProductDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.PRODUCT);
 
     @Override
-    public String update(OrderProductEntity orderProductEntity) throws Exception {
-        return "";
-    }
+    public boolean saveProductsToList(int orderId, List<OrderProductDTO> dtoList) throws Exception {
 
-    @Override
-    public String delete(OrderProductEntity orderProductEntity) throws Exception {
-        return "";
-    }
+        for (OrderProductDTO orderProductDTO : dtoList) {
 
-    @Override
-    public OrderProductEntity search(String id) throws Exception {
-        return null;
-    }
+            boolean isInserted = CrudUtil.execute(
+                    "INSERT INTO order_products (order_id, product_id, qty, price) VALUES (?,?,?,?)",
+                    orderId,
+                    orderProductDTO.getProductId(),
+                    orderProductDTO.getQty(),
+                    orderProductDTO.getPrice()
+            );
 
-    @Override
-    public CategoryDTO getAll() throws Exception {
-        return null;
+            if (!isInserted) {
+                throw new Exception("Something Went Wrong Inserting Data");
+            }
+
+            boolean isQtyUpdated = productDAO.decreaseProductQTY(
+                    orderProductDTO.getProductId(),
+                    orderProductDTO.getQty()
+            );
+
+            if (!isQtyUpdated) {
+                throw new Exception("Something Went Wrong Reducing QTY");
+            }
+        }
+
+        return true;
     }
 }

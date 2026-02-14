@@ -1,9 +1,10 @@
 package edu.ijse.layered.fx.sms.dao.custom.impl;
 
 import edu.ijse.layered.fx.sms.dao.custom.PaymentDAO;
-import edu.ijse.layered.fx.sms.dto.CategoryDTO;
 import edu.ijse.layered.fx.sms.entity.PaymentEntity;
 import edu.ijse.layered.fx.sms.util.CrudUtil;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class PaymentDAOImpl implements PaymentDAO {
 
@@ -30,18 +31,38 @@ public class PaymentDAOImpl implements PaymentDAO {
 
     @Override
     public String delete(String id) throws Exception {
-        return CrudUtil.execute("DELETE FROM Payment WHERE payment_id = ?",
-                id);
+        return CrudUtil.execute("DELETE FROM Payment WHERE payment_id = ?", id);
     }
 
     @Override
     public PaymentEntity search(String id) throws Exception {
-        return CrudUtil.execute("SELECT * FROM Payment WHERE payment_id = ?",
-                id);
+        ResultSet rst = CrudUtil.execute("SELECT * FROM Payment WHERE payment_id = ?", id);
+        return new PaymentEntity(
+                rst.getString("payment_id"),
+                rst.getString("customer_id"),
+                rst.getString("method"),
+                rst.getDouble("amount"),
+                rst.getString("reference"),
+                rst.getDate("received_at").toLocalDate()
+        );
     }
 
     @Override
-    public CategoryDTO getAll() throws Exception {
-        return CrudUtil.execute("SELECT * FROM Payment");
+    public ArrayList<PaymentEntity> getAll() throws Exception {
+        ResultSet rst = CrudUtil.execute("SELECT * FROM Payment");
+
+        ArrayList<PaymentEntity> paymentEntities = new ArrayList<>();
+
+        while (rst.next()){
+            paymentEntities.add(new PaymentEntity(
+                    rst.getString("payment_id"),
+                    rst.getString("customer_id"),
+                    rst.getString("method"),
+                    rst.getDouble("amount"),
+                    rst.getString("reference"),
+                    rst.getDate("received_at").toLocalDate()
+            ));
+        }
+        return paymentEntities;
     }
 }

@@ -1,7 +1,10 @@
 package edu.ijse.layered.fx.sms.dao.custom;
 
-import edu.ijse.layered.fx.sms.dao.CrudDAO;
-import edu.ijse.layered.fx.sms.entity.OrderProductEntity;
+import edu.ijse.layered.fx.sms.dto.OrderProductDTO;
+import java.util.List;
 
-public interface OrderProductDAO extends CrudDAO<OrderProductEntity> {
+public interface OrderProductDAO {
+
+    public boolean saveProductsToList(int orderId, List<OrderProductDTO> dtoList) throws Exception;
+
 }

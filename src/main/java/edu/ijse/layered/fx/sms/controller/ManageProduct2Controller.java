@@ -1,7 +1,8 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.ProductDTO;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.ProductModel;
+import edu.ijse.layered.fx.sms.bo.custom.ProductBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.ProductBOImpl;
+import edu.ijse.layered.fx.sms.dto.ProductDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
@@ -10,7 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ManageProduct2Controller {
 
-    private final ProductModel productModel = new ProductModel();
+    private final ProductBO productBO = new ProductBOImpl();
 
     @FXML
     private TableColumn<ProductDTO, String> colProductID;
@@ -59,7 +60,7 @@ public class ManageProduct2Controller {
     private void loadTable() {
         try {
             detailsTable.getItems().clear();
-            detailsTable.getItems().addAll(productModel.getAllProducts());
+            detailsTable.getItems().addAll(productBO.getAll());
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
     }

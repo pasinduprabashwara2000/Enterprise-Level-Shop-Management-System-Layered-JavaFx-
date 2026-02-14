@@ -1,7 +1,8 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.SupplierDTO;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.SupplierModel;
+import edu.ijse.layered.fx.sms.bo.custom.SupplierBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.SupplierBOImpl;
+import edu.ijse.layered.fx.sms.dto.SupplierDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -15,7 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ManageSupplierController {
 
-    final private SupplierModel supplierModel = new SupplierModel();
+    final private SupplierBO supplierBO = new SupplierBOImpl();
 
     @FXML
     private Label addressLabel;
@@ -119,7 +120,7 @@ public class ManageSupplierController {
     public void loadTable() {
         try {
             detailsTable.getItems().clear();
-            detailsTable.getItems().addAll(supplierModel.getAllSuppliers());
+            detailsTable.getItems().addAll(supplierBO.getAll());
         }catch(Exception e){
             new Alert(AlertType.ERROR,e.getMessage());
         }
@@ -128,7 +129,7 @@ public class ManageSupplierController {
     @FXML
     void navigateDelete(ActionEvent event) {
         try {
-            String rsp = supplierModel.deleteSupplier(supplierIDTxt.getText());
+            String rsp = supplierBO.delete(supplierIDTxt.getText());
             new Alert(AlertType.INFORMATION, rsp).show();
             loadTable();
             navigateReset(event);
@@ -158,7 +159,7 @@ public class ManageSupplierController {
                     emailTxt.getText(),
                     addressTxt.getText()
             );
-            String rsp = supplierModel.saveSupplier(supplier);
+            String rsp = supplierBO.save(supplier);
             new Alert(Alert.AlertType.INFORMATION,rsp).show();
             loadTable();
             navigateReset(event);
@@ -178,7 +179,7 @@ public class ManageSupplierController {
                     emailTxt.getText(),
                     addressTxt.getText()
             );
-            String rsp = supplierModel.updateSupplier(supplierDTO);
+            String rsp = supplierBO.update(supplierDTO);
             new Alert(Alert.AlertType.INFORMATION, rsp).show();
             loadTable();
             navigateReset(event);

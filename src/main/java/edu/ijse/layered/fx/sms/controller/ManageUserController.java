@@ -1,7 +1,8 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.UserDTO;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.UserModel;
+import edu.ijse.layered.fx.sms.bo.custom.UserBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.UserBOImpl;
+import edu.ijse.layered.fx.sms.dto.UserDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 
 public class ManageUserController {
 
-    private final UserModel userModel = new UserModel();
+    private final UserBO userBO = new UserBOImpl();
 
     @FXML
     private Label activeLabel;
@@ -104,7 +105,7 @@ public class ManageUserController {
     public void loadTable() {
         try {
             detailsTable.getItems().clear();
-            detailsTable.getItems().addAll(userModel.getAllUsers());
+            detailsTable.getItems().addAll(userBO.getAll());
         } catch (Exception e) {
             new Alert(AlertType.ERROR, e.getMessage()).show();
         }
@@ -113,7 +114,7 @@ public class ManageUserController {
     @FXML
     void navigateDelete(ActionEvent event) {
         try {
-            String rsp = userModel.deleteUser(userIDTxt.getText());
+            String rsp = userBO.delete(userIDTxt.getText());
             new Alert(AlertType.INFORMATION, rsp).show();
             loadTable();
             navigateReset(event);
@@ -154,7 +155,7 @@ public class ManageUserController {
                     activeStatusPicker.getValue(),
                     datePicker.getValue()
             );
-            String rsp = userModel.saveUser(userDTO);
+            String rsp = userBO.save(userDTO);
             new Alert(AlertType.INFORMATION, rsp).show();
             loadTable();
             navigateReset(event);
@@ -186,7 +187,7 @@ public class ManageUserController {
                     activeStatusPicker.getValue(),
                     datePicker.getValue()
             );
-            String rsp = userModel.updateUser(userDTO);
+            String rsp = userBO.update(userDTO);
             new Alert(AlertType.INFORMATION, rsp).show();
             loadTable();
             navigateReset(event);

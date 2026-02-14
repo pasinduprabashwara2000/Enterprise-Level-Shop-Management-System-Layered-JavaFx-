@@ -1,9 +1,10 @@
 package edu.ijse.layered.fx.sms.dao.custom.impl;
 
 import edu.ijse.layered.fx.sms.dao.custom.CustomerDAO;
-import edu.ijse.layered.fx.sms.dto.CategoryDTO;
 import edu.ijse.layered.fx.sms.entity.CustomerEntity;
 import edu.ijse.layered.fx.sms.util.CrudUtil;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class CustomerDAOImpl implements CustomerDAO {
 
@@ -28,18 +29,43 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public String delete(String id) throws Exception {
-        return CrudUtil.execute("DELETE FROM Customer WHERE customerId=?",
-                    id);
+        return CrudUtil.execute("DELETE FROM Customer WHERE customerId=?", id);
     }
 
     @Override
     public CustomerEntity search(String id) throws Exception {
-        return CrudUtil.execute("SELECT * FROM Customer WHERE customerId=?",
-                id);
+        ResultSet rst = CrudUtil.execute("SELECT * FROM Customer WHERE customerId=?", id);
+            if (rst.next()){
+                return new CustomerEntity(
+                        rst.getString("customerId"),
+                        rst.getString("name"),
+                        rst.getInt("phone"),
+                        rst.getString("email"),
+                        rst.getString("loyaltyCode")
+                );
+            }
+
+            return null;
+
     }
 
     @Override
-    public CategoryDTO getAll() throws Exception {
-        return CrudUtil.execute("SELECT * FROM Customer");
+    public ArrayList<CustomerEntity> getAll() throws Exception {
+
+        ResultSet rst = CrudUtil.execute("SELECT * FROM Customer");
+        ArrayList <CustomerEntity> customerEntities = new ArrayList<>();
+
+        while (rst.next()){
+             customerEntities.add(new CustomerEntity(
+                     rst.getString("customerId"),
+                     rst.getString("name"),
+                     rst.getInt("phone"),
+                     rst.getString("email"),
+                     rst.getString("loyaltyCode")
+             ));
+        }
+
+        return customerEntities;
+
     }
 }

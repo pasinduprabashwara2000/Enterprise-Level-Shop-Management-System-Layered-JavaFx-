@@ -1,7 +1,8 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.CustomerDTO;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.CustomerModel;
+import edu.ijse.layered.fx.sms.bo.custom.CustomerBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.CustomerBOImpl;
+import edu.ijse.layered.fx.sms.dto.CustomerDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -9,7 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ManageCustomerController {
 
-    private final CustomerModel customerModel = new CustomerModel();
+    private final CustomerBO customerBO = new CustomerBOImpl();
 
     @FXML
     private TableColumn<CustomerDTO, String> colCusId;
@@ -98,7 +99,7 @@ public class ManageCustomerController {
     public void loadTable(){
         try {
             detailsTable.getItems().clear();
-            detailsTable.getItems().addAll(customerModel.getAllCustomers());
+            detailsTable.getItems().addAll(customerBO.getAll());
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR,e.getMessage());
         }
@@ -107,7 +108,7 @@ public class ManageCustomerController {
     @FXML
     void navigateDelete(ActionEvent event) {
         try{
-            String res = customerModel.deleteCustomer(idTxt.getText());
+            String res = customerBO.delete(idTxt.getText());
             loadTable();
             navigateReset(event);
             new Alert(Alert.AlertType.INFORMATION, res).show();
@@ -134,7 +135,7 @@ public class ManageCustomerController {
                   emailTxt.getText(),
                   loyaltyCodeTxt.getText()
           );
-          String res = customerModel.saveCustomer(customerDTO);
+          String res = customerBO.save(customerDTO);
           new Alert(Alert.AlertType.INFORMATION, res).show();
           loadTable();
           navigateReset(event);
@@ -153,7 +154,7 @@ public class ManageCustomerController {
                     emailTxt.getText(),
                     loyaltyCodeTxt.getText()
             );
-            String res = customerModel.updateCustomer(customerDTO);
+            String res = customerBO.update(customerDTO);
             new Alert(Alert.AlertType.INFORMATION, res).show();
             loadTable();
             navigateReset(event);

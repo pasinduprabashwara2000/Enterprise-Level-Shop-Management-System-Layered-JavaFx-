@@ -1,9 +1,11 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.CategoryDTO;
-import edu.ijse.mvc.fx.shopmanagementsystem.DTO.ProductDTO;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.CategoryModel;
-import edu.ijse.mvc.fx.shopmanagementsystem.model.ProductModel;
+import edu.ijse.layered.fx.sms.bo.custom.CategoryBO;
+import edu.ijse.layered.fx.sms.bo.custom.ProductBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.CategoryBOImpl;
+import edu.ijse.layered.fx.sms.bo.custom.impl.ProductBOImpl;
+import edu.ijse.layered.fx.sms.dto.CategoryDTO;
+import edu.ijse.layered.fx.sms.dto.ProductDTO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -15,8 +17,8 @@ import java.util.ArrayList;
 
 public class ManageProductController {
 
-    private final ProductModel productModel = new ProductModel();
-    private final CategoryModel categoryModel = new CategoryModel();
+    private final ProductBO productBO = new ProductBOImpl();
+    private final CategoryBO categoryBO = new CategoryBOImpl();
 
     @FXML
     private CheckBox activeChk;
@@ -108,7 +110,7 @@ public class ManageProductController {
         Task<ObservableList<ProductDTO>> task = new Task<>() {
             @Override
             protected ObservableList<ProductDTO> call() throws Exception {
-                return FXCollections.observableArrayList(productModel.getAllProducts());
+                return FXCollections.observableArrayList(productBO.getAll());
             }
         };
         task.setOnSucceeded(e -> detailsTable.setItems(task.getValue()));
@@ -120,7 +122,7 @@ public class ManageProductController {
         Task<ObservableList<String>> task = new Task<>() {
             @Override
             protected ObservableList<String> call() throws Exception {
-                ArrayList<CategoryDTO> categories = categoryModel.getAllCategories();
+                ArrayList<CategoryDTO> categories = categoryBO.getAll();
                 return FXCollections.observableArrayList(
                         categories.stream().map(CategoryDTO::getCategoryID).toList()
                 );
@@ -144,7 +146,7 @@ public class ManageProductController {
                     activeChk.isSelected(),
                     categoryCombo.getValue()
             );
-            String rsp = productModel.saveProduct(dto);
+            String rsp = productBO.save(dto);
             new Alert(Alert.AlertType.INFORMATION, rsp).show();
             loadTableThread();
             navigateReset(null);
@@ -166,7 +168,7 @@ public class ManageProductController {
                     activeChk.isSelected(),
                     categoryCombo.getValue()
             );
-            String rsp = productModel.updateProduct(dto);
+            String rsp = productBO.update(dto);
             new Alert(Alert.AlertType.INFORMATION, rsp).show();
             loadTableThread();
             navigateReset(null);
@@ -178,7 +180,7 @@ public class ManageProductController {
     @FXML
     void navigateDelete(ActionEvent event) {
         try {
-            String rsp = productModel.deleteProduct(productIDTxt.getText());
+            String rsp = productBO.delete(productIDTxt.getText());
             new Alert(Alert.AlertType.INFORMATION, rsp).show();
             loadTableThread();
             navigateReset(null);

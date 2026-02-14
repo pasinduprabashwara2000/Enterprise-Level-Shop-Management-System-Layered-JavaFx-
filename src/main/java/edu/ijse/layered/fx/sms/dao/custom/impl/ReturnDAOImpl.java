@@ -1,9 +1,10 @@
 package edu.ijse.layered.fx.sms.dao.custom.impl;
 
 import edu.ijse.layered.fx.sms.dao.custom.ReturnDAO;
-import edu.ijse.layered.fx.sms.dto.CategoryDTO;
 import edu.ijse.layered.fx.sms.util.CrudUtil;
 import edu.ijse.mvc.fx.shopmanagementsystem.DTO.ReturnEntity;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class ReturnDAOImpl implements ReturnDAO {
 
@@ -32,18 +33,39 @@ public class ReturnDAOImpl implements ReturnDAO {
 
     @Override
     public String delete(String id) throws Exception {
-        return CrudUtil.execute("DELETE FROM Returns WHERE returnId = ?",
-                id);
+        return CrudUtil.execute("DELETE FROM Returns WHERE returnId = ?", id);
     }
 
     @Override
     public ReturnEntity search(String id) throws Exception {
-        return CrudUtil.execute("SELECT * FROM Returns WHERE returnId = ?",
-                id);
+        ResultSet rst = CrudUtil.execute("SELECT * FROM Returns WHERE returnId = ?", id);
+        return new ReturnEntity(
+                rst.getString("returnId"),
+                rst.getString("paymentId"),
+                rst.getDouble("refundAmount"),
+                rst.getString("reason"),
+                rst.getString("action"),
+                rst.getString("status"),
+                rst.getDate("returnDate").toLocalDate()
+        );
     }
 
     @Override
-    public CategoryDTO getAll() throws Exception {
-        return CrudUtil.execute("SELECT * FROM Returns");
+    public ArrayList<ReturnEntity> getAll() throws Exception {
+        ResultSet rst = CrudUtil.execute("SELECT * FROM Returns");
+        ArrayList <ReturnEntity> returnEntities = new ArrayList<>();
+
+        while (rst.next()){
+            returnEntities.add(new ReturnEntity(
+                    rst.getString("returnId"),
+                    rst.getString("paymentId"),
+                    rst.getDouble("refundAmount"),
+                    rst.getString("reason"),
+                    rst.getString("action"),
+                    rst.getString("status"),
+                    rst.getDate("returnDate").toLocalDate()
+            ));
+        }
+        return returnEntities;
     }
 }
