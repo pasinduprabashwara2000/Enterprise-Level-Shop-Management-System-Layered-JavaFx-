@@ -5,8 +5,14 @@ import edu.ijse.layered.fx.sms.dao.custom.OrderProductDAO;
 import edu.ijse.layered.fx.sms.db.DBConnection;
 import edu.ijse.layered.fx.sms.dto.OrderDTO;
 import edu.ijse.layered.fx.sms.util.CrudUtil;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.view.JasperViewer;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OrderDAOImpl implements OrderDAO {
 
@@ -61,5 +67,20 @@ public class OrderDAOImpl implements OrderDAO {
         } finally {
             conn.setAutoCommit(true);
         }
+    }
+
+    @Override
+    public void printInvoice(Integer orderId) throws SQLException, JRException, ClassNotFoundException {
+
+        Connection conn = DBConnection.getDbConnection().getConnection();
+        InputStream inputStream = getClass().getResourceAsStream("/edu/ijse/layered/fx/sms/reports/invoice.jrxml");
+        JasperReport jr = JasperCompileManager.compileReport(inputStream);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("ORDER_ID", orderId);
+
+        JasperPrint jp = JasperFillManager.fillReport(jr, params, conn);
+        JasperViewer.viewReport(jp, false);
+
     }
 }

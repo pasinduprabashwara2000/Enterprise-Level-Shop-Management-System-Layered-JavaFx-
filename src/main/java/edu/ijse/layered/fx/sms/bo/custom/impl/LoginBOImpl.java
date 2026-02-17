@@ -4,6 +4,7 @@ import edu.ijse.layered.fx.sms.bo.custom.LoginBO;
 import edu.ijse.layered.fx.sms.dao.DAOFactory;
 import edu.ijse.layered.fx.sms.dao.custom.LoginDAO;
 import edu.ijse.layered.fx.sms.dto.LoginDTO;
+import edu.ijse.layered.fx.sms.entity.LoginEntity;
 
 public class LoginBOImpl implements LoginBO {
 
@@ -11,6 +12,11 @@ public class LoginBOImpl implements LoginBO {
 
     @Override
     public LoginDTO findByUsernameAndPassword(String username, String password) throws Exception {
-        return loginDAO.findByUsernameAndPassword(username, password);
+        LoginEntity loginEntity = loginDAO.findByUsernameAndPassword(username,password);
+        return new LoginDTO(
+                loginEntity.getUserName(),
+                loginEntity.getPassword(),
+                null
+        );
     }
 }

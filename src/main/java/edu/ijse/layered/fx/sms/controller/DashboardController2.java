@@ -1,5 +1,7 @@
 package edu.ijse.layered.fx.sms.controller;
 
+import edu.ijse.layered.fx.sms.bo.custom.DashboardBO;
+import edu.ijse.layered.fx.sms.bo.custom.impl.DashboardBOImpl;
 import edu.ijse.layered.fx.sms.dto.custom.ProductTM;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -10,6 +12,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
 public class DashboardController2 {
+
+    private final DashboardBO dashboardBO = new DashboardBOImpl();
 
     @FXML
     private TableColumn<ProductTM, Integer> colBarcode;
@@ -71,7 +75,7 @@ public class DashboardController2 {
     private void loadTable(){
         try {
             detailsTable.getItems().clear();
-            detailsTable.getItems().addAll(DashboardModel.topSellingProducts());
+            detailsTable.getItems().addAll(dashboardBO.topSellingProducts());
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
         }
@@ -79,7 +83,7 @@ public class DashboardController2 {
 
     private void loadCustomerCount() throws Exception {
         try {
-            int count = DashboardModel.getCustomerCount();
+            int count = dashboardBO.getCustomerCount();
             lblCustomersCount.setText(String.valueOf(count));
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
@@ -88,7 +92,7 @@ public class DashboardController2 {
 
     private void loadOrdersCount() throws Exception {
         try {
-            int count = DashboardModel.getOrderCount();
+            int count = dashboardBO.getOrderCount();
             lblOrderCount.setText(String.valueOf(count));
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
@@ -97,7 +101,7 @@ public class DashboardController2 {
 
     private void loadPaymentCount() throws Exception {
         try {
-            int count = DashboardModel.getPaymentCount();
+            int count = dashboardBO.getPaymentCount();
             lblPaymentCount.setText(String.valueOf(count));
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR,e.getMessage()).show();
@@ -106,7 +110,7 @@ public class DashboardController2 {
 
     private void loadReturnCount() throws Exception {
         try {
-            int count = DashboardModel.getReturnCount();
+            int count = dashboardBO.getReturnCount();
             lblReturnCount.setText(String.valueOf(count));
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR,e.getMessage()).show();

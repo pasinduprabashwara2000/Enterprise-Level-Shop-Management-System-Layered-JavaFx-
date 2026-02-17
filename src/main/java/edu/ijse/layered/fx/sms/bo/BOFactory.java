@@ -4,42 +4,87 @@ import edu.ijse.layered.fx.sms.bo.custom.impl.*;
 
 public class BOFactory {
 
-    private static BOFactory boFactory;
+    // Singleton instance
+    private static BOFactory instance;
 
-    private BOFactory(){
+    // Private constructor prevents external creation
+    private BOFactory() {}
 
-    }
-
-    public static BOFactory getInstance(){
-        if (boFactory == null){
-            boFactory = new BOFactory();
+    // Global access point
+    public static BOFactory getInstance() {
+        if (instance == null) {
+            instance = new BOFactory();
         }
-        return boFactory;
+        return instance;
     }
 
-    public enum BOTypes{
-        CATEGORY,CUSTOMER,EXPENSE,LOGIN,ORDER, ORDER_PRODUCT, PAYMENT, PRODUCT, PURCHASE_ORDER,
-        RETURN, ROLE, SUPPLIER, USER
+    // BO Types
+    public enum BOTypes {
+        DASHBOARD,
+        CATEGORY,
+        CUSTOMER,
+        EXPENSE,
+        LOGIN,
+        ORDER,
+        ORDER_PRODUCT,
+        PAYMENT,
+        PRODUCT,
+        PURCHASE_ORDER,
+        RETURN,
+        ROLE,
+        SUPPLIER,
+        USER
     }
 
-    public SuperBO getBO(BOTypes boTypes){
-        switch (boTypes){
-            case CATEGORY -> new CategoryBOImpl();
-            case CUSTOMER -> new CustomerBOImpl();
-            case EXPENSE -> new ExpenseBOImpl();
-            case LOGIN -> new LoginBOImpl();
-            case ORDER -> new OrderBOImpl();
-            case ORDER_PRODUCT -> new OrderProductBOImpl();
-            case PAYMENT -> new PaymentBOImpl();
-            case PRODUCT -> new ProductBOImpl();
-            case PURCHASE_ORDER -> new PurchaseOrderBOImpl();
-            case RETURN -> new ReturnBOImpl();
-            case ROLE -> new RoleBOImpl();
-            case SUPPLIER -> new SupplierBOImpl();
-            case USER -> new UserBOImpl();
+    // Factory Method
+    public Object getBO(BOTypes type) {
+
+        switch (type) {
+
+            case DASHBOARD:
+                return new DashboardBOImpl();
+
+            case CATEGORY:
+                return new CategoryBOImpl();
+
+            case CUSTOMER:
+                return new CustomerBOImpl();
+
+            case EXPENSE:
+                return new ExpenseBOImpl();
+
+            case LOGIN:
+                return new LoginBOImpl();
+
+            case ORDER:
+                return new OrderBOImpl();
+
+            case ORDER_PRODUCT:
+                return new OrderProductBOImpl();
+
+            case PAYMENT:
+                return new PaymentBOImpl();
+
+            case PRODUCT:
+                return new ProductBOImpl();
+
+            case PURCHASE_ORDER:
+                return new PurchaseOrderBOImpl();
+
+            case RETURN:
+                return new ReturnBOImpl();
+
+            case ROLE:
+                return new RoleBOImpl();
+
+            case SUPPLIER:
+                return new SupplierBOImpl();
+
+            case USER:
+                return new UserBOImpl();
+
+            default:
+                throw new RuntimeException("No BO found for type: " + type);
         }
-
-        return null;
     }
-
 }

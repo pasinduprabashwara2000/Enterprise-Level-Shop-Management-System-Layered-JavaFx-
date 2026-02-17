@@ -83,7 +83,7 @@ public class ManageMainMenuController {
 
     private void loadUI(String fxmlName) {
         try {
-            String fxmlPath = "/edu/ijse/mvc/fx/shopmanagementsystem/" + fxmlName + ".fxml";
+            String fxmlPath = "/edu/ijse/layered/fx/sms/" + fxmlName + ".fxml";
             URL fxmlLocation = getClass().getResource(fxmlPath);
             Parent root = FXMLLoader.load(fxmlLocation);
             contentPane.getChildren().setAll(root);

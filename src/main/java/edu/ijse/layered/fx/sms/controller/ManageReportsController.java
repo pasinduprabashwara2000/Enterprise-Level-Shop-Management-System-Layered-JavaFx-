@@ -1,6 +1,6 @@
 package edu.ijse.layered.fx.sms.controller;
 
-import edu.ijse.mvc.fx.shopmanagementsystem.DB.DBConnection;
+import edu.ijse.layered.fx.sms.db.DBConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -81,7 +81,7 @@ public class ManageReportsController {
                     JasperFillManager.fillReport(
                             jasperReport,
                             parameters,
-                            DBConnection.getInstance().getConnection()
+                            DBConnection.getDbConnection().getConnection()
                     );
 
             JasperViewer.viewReport(jasperPrint, false);

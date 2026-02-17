@@ -1,11 +1,15 @@
 package edu.ijse.layered.fx.sms.controller;
 
 import edu.ijse.layered.fx.sms.bo.custom.CustomerBO;
-import edu.ijse.layered.fx.sms.bo.custom.OrderProductBO;
+import edu.ijse.layered.fx.sms.bo.custom.OrderBO;
 import edu.ijse.layered.fx.sms.bo.custom.ProductBO;
 import edu.ijse.layered.fx.sms.bo.custom.impl.CustomerBOImpl;
-import edu.ijse.layered.fx.sms.bo.custom.impl.OrderProductBOImpl;
+import edu.ijse.layered.fx.sms.bo.custom.impl.OrderBOImpl;
 import edu.ijse.layered.fx.sms.bo.custom.impl.ProductBOImpl;
+import edu.ijse.layered.fx.sms.dto.CustomerDTO;
+import edu.ijse.layered.fx.sms.dto.OrderDTO;
+import edu.ijse.layered.fx.sms.dto.OrderProductDTO;
+import edu.ijse.layered.fx.sms.dto.ProductDTO;
 import edu.ijse.layered.fx.sms.dto.custom.OrderProductTM;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,7 +25,7 @@ public class ManageOrderController {
 
     final private CustomerBO customerBO = new CustomerBOImpl();
     final private ProductBO productBO = new ProductBOImpl();
-    private OrderProductBO orderProductBO = new OrderProductBOImpl();
+    final private OrderBO orderBO = new OrderBOImpl();
 
     @FXML
     private Button btnPlaceOrder;
@@ -91,7 +95,7 @@ public class ManageOrderController {
     private void loadCustomerIdThread() throws Exception{
         Task <ObservableList<String>> task = new Task<>() {
 
-            ArrayList <CustomerDTO> customers = customerModel.getAllCustomers();
+            ArrayList <CustomerDTO> customers = customerBO.getAll();
             @Override
             protected ObservableList<String> call() throws Exception {
                 return FXCollections.observableArrayList(customers.stream().map(CustomerDTO::getCustomerId).toList());
@@ -108,7 +112,7 @@ public class ManageOrderController {
         try {
             String selectedId = comboCustomerId.getSelectionModel().getSelectedItem();
             if (selectedId != null) {
-                CustomerDTO customerDTO = customerModel.searchCustomer(selectedId);
+                CustomerDTO customerDTO = customerBO.search(selectedId);
                 lblCustomerNameValue.setText(customerDTO.getName());
                 lblCustomerPhoneValue.setText(String.valueOf(customerDTO.getPhone()));
                 lblCustomerEmailValue.setText(customerDTO.getEmail());
@@ -122,7 +126,7 @@ public class ManageOrderController {
     private void loadItemIdThread() throws Exception{
         Task<ObservableList<String>> task = new Task<>() {
 
-            ArrayList <ProductDTO> products = productModel.getAllProducts();
+            ArrayList <ProductDTO> products = productBO.getAll();
             @Override
             protected ObservableList<String> call() throws Exception {
                 return FXCollections.observableArrayList(products.stream().map(ProductDTO::getProductID).toList());
@@ -137,7 +141,7 @@ public class ManageOrderController {
     void selectedItemId(ActionEvent event) {
         try {
             String selectedId = comboItemId.getSelectionModel().getSelectedItem();
-            ProductDTO productDTO = productModel.searchProduct(selectedId);
+            ProductDTO productDTO = productBO.search(selectedId);
 
             if(productDTO != null){
                 lblItemNameValue.setText(productDTO.getName());
@@ -216,11 +220,11 @@ public class ManageOrderController {
             }
 
             OrderDTO orderDTO = new OrderDTO(customerId, new Date(), orderProductDTOS);
-            int result = orderModel.placeOrder(orderDTO);
+            int result = (orderDTO).getOrderId();
 
             if (result > 0){
                 new Alert(Alert.AlertType.INFORMATION,"Order Placed Successfully").show();
-                orderModel.printInvoice(result);
+                orderBO.printInvoice(result);
             } else {
                 new Alert(Alert.AlertType.ERROR,"Order Saved Failed").show();
             }

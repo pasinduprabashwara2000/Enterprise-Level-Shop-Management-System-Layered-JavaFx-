@@ -4,42 +4,83 @@ import edu.ijse.layered.fx.sms.dao.custom.impl.*;
 
 public class DAOFactory {
 
-    public static DAOFactory daoFactory;
+    private static DAOFactory instance;
 
-    private DAOFactory(){
+    private DAOFactory() {}
 
-    }
-
-    public static DAOFactory getInstance(){
-        if(daoFactory == null){
-            daoFactory = new DAOFactory();
+    // Singleton access
+    public static DAOFactory getInstance() {
+        if (instance == null) {
+            instance = new DAOFactory();
         }
-        return daoFactory;
+        return instance;
     }
 
-    public enum DAOTypes{
-        CATEGORY,CUSTOMER,EXPENSE,LOGIN,ORDER, ORDER_PRODUCT, PAYMENT, PRODUCT, PURCHASE_ORDER,
-        RETURN, ROLE, SUPPLIER, USER
+    public enum DAOTypes {
+        DASHBOARD,
+        CATEGORY,
+        CUSTOMER,
+        EXPENSE,
+        LOGIN,
+        ORDER,
+        ORDER_PRODUCT,
+        PAYMENT,
+        PRODUCT,
+        PURCHASE_ORDER,
+        RETURN,
+        ROLE,
+        SUPPLIER,
+        USER
     }
 
-    public SuperDAO getDAO(DAOTypes daoTypes){
-        switch (daoTypes) {
-            case CATEGORY -> new CategoryDAOImpl();
-            case CUSTOMER -> new CustomerDAOImpl();
-            case EXPENSE -> new ExpenseDAOImpl();
-            case LOGIN -> new LoginDAOImpl();
-            case ORDER -> new OrderDAOImpl();
-            case ORDER_PRODUCT -> new OrderProductDAOImpl();
-            case PAYMENT -> new PaymentDAOImpl();
-            case PRODUCT -> new ProductDAOImpl();
-            case PURCHASE_ORDER -> new PurchaseOrderDAOImpl();
-            case RETURN -> new ReturnDAOImpl();
-            case ROLE -> new RoleDAOImpl();
-            case SUPPLIER -> new SupplierDAOImpl();
-            case USER -> new UserDAOImpl();
+    public Object getDAO(DAOTypes type) {
+
+        switch (type) {
+
+            case DASHBOARD:
+                return new DashboardDAOImpl();
+
+            case CATEGORY:
+                return new CategoryDAOImpl();
+
+            case CUSTOMER:
+                return new CustomerDAOImpl();
+
+            case EXPENSE:
+                return new ExpenseDAOImpl();
+
+            case LOGIN:
+                return new LoginDAOImpl();
+
+            case ORDER:
+                return new OrderDAOImpl();
+
+            case ORDER_PRODUCT:
+                return new OrderProductDAOImpl();
+
+            case PAYMENT:
+                return new PaymentDAOImpl();
+
+            case PRODUCT:
+                return new ProductDAOImpl();
+
+            case PURCHASE_ORDER:
+                return new PurchaseOrderDAOImpl();
+
+            case RETURN:
+                return new ReturnDAOImpl();
+
+            case ROLE:
+                return new RoleDAOImpl();
+
+            case SUPPLIER:
+                return new SupplierDAOImpl();
+
+            case USER:
+                return new UserDAOImpl();
+
+            default:
+                throw new RuntimeException("No DAO found for type: " + type);
         }
-
-        return null;
     }
-
 }

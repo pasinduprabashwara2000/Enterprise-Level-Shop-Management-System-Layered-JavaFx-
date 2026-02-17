@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface OrderProductDAO {
 
-    public boolean saveProductsToList(int orderId, List<OrderProductDTO> dtoList) throws Exception;
+    boolean saveProductsToList(int orderId, List<OrderProductDTO> dtoList) throws Exception;
 
 }
